@@ -21,10 +21,10 @@ public class KafkaTwitterProducer {
 
         final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<Status>(10000);
 
-        String consumerKey = "pgd3EgAAYy0NsHfc6TD5XA4m0";
-        String consumerSecret = "cp7LR8o4FQTc72cszuFoiQP0BQcEkpgoOHMqMn0mSLu6KFoxek";
-        String accessToken = "384519993-dSTbfXUJe2FOaAnxPdw22i1s4QFj83MWtgBFMhZs";
-        String accessTokenSecret = "W3uxu0BdpqIhuByjaa2xWXm2Ae6yFuIofI4dTyKzz87wa";
+        String consumerKey = "WeJAx0QjHyZuFIuOT0mCAlJqR";
+        String consumerSecret = "AF1PYLqk6XPrgFMlYgDQq3l91v6eHpnimlH1u45OSX3yTggMvP";
+        String accessToken = "384519993-b2PNRU3TiLxt5gTSUOlUamac7UuHZvWiF2pk9ZqU";
+        String accessTokenSecret = "xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW";
         String topicName = "twitterdata";
 
 
@@ -48,7 +48,6 @@ public class KafkaTwitterProducer {
         props.put("batch.size", 16384);
         props.put("linger.ms", 1);
         props.put("buffer.memory", 33554432);
-
         props.put("key.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer",
@@ -67,6 +66,8 @@ public class KafkaTwitterProducer {
 
                 producer.send(new ProducerRecord<String, String>(topicName, rawJson));
 
+
+
             }
 
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
@@ -82,6 +83,7 @@ public class KafkaTwitterProducer {
             }
 
             public void onStallWarning(StallWarning stallWarning) {
+                System.out.println(stallWarning);
 
             }
 
@@ -95,7 +97,7 @@ public class KafkaTwitterProducer {
         FilterQuery query = new FilterQuery();
         twitterStream.sample("en");
 
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
 
         /*
 
