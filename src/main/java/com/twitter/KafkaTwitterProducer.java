@@ -21,21 +21,21 @@ public class KafkaTwitterProducer {
 
         final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<Status>(10000);
 
-        String consumerKey = "WeJAx0QjHyZuFIuOT0mCAlJqR";
+        /*String consumerKey = "WeJAx0QjHyZuFIuOT0mCAlJqR";
         String consumerSecret = "AF1PYLqk6XPrgFMlYgDQq3l91v6eHpnimlH1u45OSX3yTggMvP";
         String accessToken = "384519993-b2PNRU3TiLxt5gTSUOlUamac7UuHZvWiF2pk9ZqU";
-        String accessTokenSecret = "xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW";
+        String accessTokenSecret = "xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW";*/
         String topicName = "twitterdata";
 
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(consumerKey)
-                .setOAuthConsumerSecret(consumerSecret)
-                .setOAuthAccessToken(accessToken)
-                .setOAuthAccessTokenSecret(accessTokenSecret)
-                .setJSONStoreEnabled(true)
-                .setIncludeEntitiesEnabled(true);
+        cb.setOAuthConsumerKey("WeJAx0QjHyZuFIuOT0mCAlJqR")
+                .setOAuthConsumerSecret("AF1PYLqk6XPrgFMlYgDQq3l91v6eHpnimlH1u45OSX3yTggMvP")
+                .setOAuthAccessToken("384519993-b2PNRU3TiLxt5gTSUOlUamac7UuHZvWiF2pk9ZqU")
+                .setOAuthAccessTokenSecret("xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW")
+                .setJSONStoreEnabled(true);
+
+
 
 
         TwitterStreamFactory tf = new TwitterStreamFactory(cb.build());
@@ -58,14 +58,15 @@ public class KafkaTwitterProducer {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
 
+
         StatusListener listener = new StatusListener() {
             public void onStatus(Status status) {
                 System.out.printf("@%s: %s\n", status.getUser().getScreenName(), status.getText());
                 String rawJson = TwitterObjectFactory.getRawJSON(status);
+                System.out.println(rawJson);
                 logger.info(rawJson);
 
                 producer.send(new ProducerRecord<String, String>(topicName, rawJson));
-
 
 
             }
@@ -94,21 +95,23 @@ public class KafkaTwitterProducer {
         };
         twitterStream.addListener(listener);
 
-        FilterQuery query = new FilterQuery();
         twitterStream.sample("en");
 
         //Thread.sleep(5000);
 
-        /*
+/*
 
         while(true) {
-            Status tweet = queue.poll();
+            Status status = queue.poll();
 
-            if (tweet == null) {
+            if (status == null) {
                 Thread.sleep(100);
             } else {
+                System.out.printf("@%s: %s\n", status.getUser().getScreenName(), status.getText());
+                String rawJson = TwitterObjectFactory.getRawJSON(status);
+                System.out.println(rawJson);
 
-                producer.send(new ProducerRecord<String, Status>(topicName, tweet));
+                producer.send(new ProducerRecord<String, String>(topicName, rawJson));
             }
         }*/
 
