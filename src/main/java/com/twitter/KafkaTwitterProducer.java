@@ -52,8 +52,7 @@ public class KafkaTwitterProducer {
                 "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
-        //props.put("value.serializer",
-          //      "com.twitter.StatusSerializer");
+
 
 
         Producer<String, String> producer = new KafkaProducer<>(props);
