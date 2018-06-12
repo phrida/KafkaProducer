@@ -1,10 +1,5 @@
 package com.twitter;
 
-
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -13,9 +8,6 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.Buffer;
-import java.util.*;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -28,11 +20,7 @@ public class KafkaTwitterProducer {
 
         final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<Status>(10000);
 
-        /*String consumerKey = "WeJAx0QjHyZuFIuOT0mCAlJqR";
-        String consumerSecret = "AF1PYLqk6XPrgFMlYgDQq3l91v6eHpnimlH1u45OSX3yTggMvP";
-        String accessToken = "384519993-b2PNRU3TiLxt5gTSUOlUamac7UuHZvWiF2pk9ZqU";
-        String accessTokenSecret = "xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW";*/
-        String topicName = "twitterparse";
+        String topicName = "twittergenerator";
 
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -64,6 +52,8 @@ public class KafkaTwitterProducer {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
 
+        //When reading from Data Generator
+
         Socket clientSocket = null;
         BufferedReader input = null;
 
@@ -76,13 +66,6 @@ public class KafkaTwitterProducer {
                 try {
                     String responseLine;
                     while ((responseLine = input.readLine()) != null) {
-                        System.out.println("Server: " + responseLine);
-                        //Status status = TwitterObjectFactory.createStatus(responseLine);
-
-                        //System.out.printf("@%s: %s\n", status.getUser().getScreenName(), status.getText());
-                        //String rawJson = TwitterObjectFactory.getRawJSON(responseLine);
-                        //System.out.println(rawJson);
-                        //logger.info(rawJson);
 
                         producer.send(new ProducerRecord<String, String>(topicName, responseLine));
 
@@ -107,8 +90,8 @@ public class KafkaTwitterProducer {
 
 
 
+        //When reading from Twitter Streaming API
 
-        /*
         StatusListener listener = new StatusListener() {
             public void onStatus(Status status) {
                 System.out.printf("@%s: %s\n", status.getUser().getScreenName(), status.getText());
@@ -146,26 +129,6 @@ public class KafkaTwitterProducer {
         twitterStream.addListener(listener);
 
         twitterStream.sample("en");
-
-        //Thread.sleep(5000);*/
-
-/*
-
-        while(true) {
-            Status status = queue.poll();
-
-            if (status == null) {
-                Thread.sleep(100);
-            } else {
-                System.out.printf("@%s: %s\n", status.getUser().getScreenName(), status.getText());
-                String rawJson = TwitterObjectFactory.getRawJSON(status);
-                System.out.println(rawJson);
-
-                producer.send(new ProducerRecord<String, String>(topicName, rawJson));
-            }
-        }*/
-
-
 
 
     }
