@@ -24,10 +24,10 @@ public class KafkaTwitterProducer {
 
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setOAuthConsumerKey("WeJAx0QjHyZuFIuOT0mCAlJqR")
-                .setOAuthConsumerSecret("AF1PYLqk6XPrgFMlYgDQq3l91v6eHpnimlH1u45OSX3yTggMvP")
-                .setOAuthAccessToken("384519993-b2PNRU3TiLxt5gTSUOlUamac7UuHZvWiF2pk9ZqU")
-                .setOAuthAccessTokenSecret("xRnVgh2CpD41GKi0W0B2Z5JA6S8JRIL83W8NuuiuK4CtW")
+        cb.setOAuthConsumerKey("consumerKey")
+                .setOAuthConsumerSecret("consumerSecret")
+                .setOAuthAccessToken("accessToken")
+                .setOAuthAccessTokenSecret("accessTokenSecret")
                 .setJSONStoreEnabled(true);
 
 
